@@ -1,0 +1,10 @@
+.navbar {
+  padding: 2em;
+}
+
+@media screen and (min-width: 320px) {
+  .navbar {
+    display: flex;
+    justify-content: center;
+  }
+}
