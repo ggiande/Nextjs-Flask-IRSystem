@@ -27,6 +27,19 @@ export default function Home() {
     setResponse(data);
     console.log("fetched: ", data);
   }
+
+  const listDocuments = Object.values(response._list_relevant_docs || {});
+  // console.log(typeof listDocuments);
+  // console.log(listDocuments);
+
+  function ListItem(props) {
+    return <li>{props.value}</li>;
+  }
+
+  const newListDocuments = listDocuments.map((doc, index) => (
+    <ListItem key={index} value={doc} />
+  ));
+
   return (
     <div className={styles.container}>
       <Head>
@@ -104,10 +117,9 @@ export default function Home() {
             Frequency of word in all documents:{" "}
             {parseFloat(response._frequency).toFixed(4)}
           </p>
-          <p>
-            List of Documents where word is found:{" "}
-            {response._list_relevant_docs}
-          </p>
+
+          <p>List of Documents where word is found:</p>
+          <ul>{newListDocuments}</ul>
         </div>
       </div>
     </div>
