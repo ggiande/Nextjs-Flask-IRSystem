@@ -7,33 +7,50 @@ import Image from "next/image";
 export default function Home() {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState([]);
+  const [id, setId] = useState("");
+
   useEffect(() => {
-    fetchData();
+    fetchDataSearch();
   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (query) {
-      fetchData();
+    console.log("id: ", id);
+    if (query && id == "search") {
+      fetchDataSearch();
       console.log("Query: ", query);
+    } else if (id == "lucky") {
+      fetchDataLucky();
     }
   };
 
-  async function fetchData() {
+  async function fetchDataSearch() {
     const res = await fetch("http://127.0.0.1:5000/" + query).catch((err) => {
       console.log(err);
     });
     const data = await res.json();
     // data = Array.from(data);
     setResponse(data);
-    console.log("fetched: ", data);
+    console.log("fetchDataSearch -> : ", data);
+  }
+
+  async function fetchDataLucky() {
+    const res = await fetch("http://127.0.0.1:5000/lucky").catch((err) => {
+      console.log(err);
+    });
+    const data = await res.json();
+    // data = Array.from(data);
+    setResponse(data);
+    console.log("fetchDataLucky -> : ", data);
   }
 
   const listDocuments = Object.values(response._list_relevant_docs || {});
-  // console.log(typeof listDocuments);
-  // console.log(listDocuments);
 
   function ListItem(props) {
-    return <li>{props.value}</li>;
+    return (
+      <div className={styles["list-docs"]}>
+        <p>{props.value}</p>
+      </div>
+    );
   }
 
   const newListDocuments = listDocuments.map((doc, index) => (
@@ -100,10 +117,20 @@ export default function Home() {
             placeholder="Search.."
           />
           <div className={styles["search-bar"]}>
-            <button className={styles.button} type="submit">
+            <button
+              className={styles.button}
+              type="submit"
+              onClick={(e) => setId(e.target.id)}
+              id="search"
+            >
               QryFlask Search
             </button>
-            <button className={styles.button} type="submit">
+            <button
+              className={styles.button}
+              type="submit"
+              onClick={(e) => setId(e.target.id)}
+              id="lucky"
+            >
               I&apos;m Feeling Lucky
             </button>
           </div>
@@ -118,8 +145,8 @@ export default function Home() {
             {parseFloat(response._frequency).toFixed(4)}
           </p>
 
-          <p>List of Documents where word is found:</p>
-          <ul>{newListDocuments}</ul>
+          <p>List of Documents where your query can be found:</p>
+          {newListDocuments}
         </div>
       </div>
     </div>

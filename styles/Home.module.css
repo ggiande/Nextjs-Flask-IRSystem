@@ -46,6 +46,7 @@
   padding: 1em;
   background: #7269ff;
   border-radius: 15px;
+  text-transform: capitalize;
 }
 
 .card:hover {
@@ -84,6 +85,13 @@
 
 #jumboImage {
   min-width: 50%;
+}
+
+.list-docs {
+  border: 1px white solid;
+  padding: 0em 1em 0em 1em;
+  text-transform: uppercase;
+  margin: 1em 0em 1em 0em;
 }
 
 .query {
