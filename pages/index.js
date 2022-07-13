@@ -44,8 +44,9 @@ export default function Home() {
   }
 
   const listDocuments = Object.values(response._list_relevant_docs || {});
+  const listWordSnippets = Object.values(response._word_snippets || {});
 
-  function ListItem(props) {
+  function ListDocs(props) {
     return (
       <div className={styles["list-docs"]}>
         <p>{props.value}</p>
@@ -53,9 +54,25 @@ export default function Home() {
     );
   }
 
+  function ListSnips(props) {
+    return (
+      <div className={styles["list-snips"]}>
+        <p>{props.value}</p>
+      </div>
+    );
+  }
+
   const newListDocuments = listDocuments.map((doc, index) => (
-    <ListItem key={index} value={doc} />
+    <ListDocs key={index} value={doc} />
   ));
+
+  const newWordSnippets = listWordSnippets.map((snip) =>
+    snip.map((sSnip, sIndex) => (
+      <ListSnips key={sIndex} value={sSnip}>
+        {(sIndex ? ", " : "") + sSnip}
+      </ListSnips>
+    ))
+  );
 
   return (
     <div className={styles.container}>
@@ -136,7 +153,6 @@ export default function Home() {
           </div>
         </form>
 
-        {/* {response.map(() => ( */}
         <div className={styles.card}>
           {/* parseFloat(0.0009999999.toFixed(4)); */}
           <h2>{response._text_string}</h2>
@@ -147,6 +163,9 @@ export default function Home() {
 
           <p>List of Documents where your query can be found:</p>
           {newListDocuments}
+
+          <p>Word Snippets:</p>
+          {newWordSnippets}
         </div>
       </div>
     </div>
