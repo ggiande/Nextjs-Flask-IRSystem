@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import reactAndFlask from "../public/reactandflask.svg";
 import Image from "next/image";
+var http = require("http");
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -10,8 +11,9 @@ export default function Home() {
   const [id, setId] = useState("");
 
   useEffect(() => {
-    fetchDataSearch();
+    fetchDataSearchExample();
   }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("id: ", id);
@@ -23,12 +25,24 @@ export default function Home() {
     }
   };
 
-  async function fetchDataSearch() {
-    const res = await fetch("http://127.0.0.1:5000/" + query).catch((err) => {
+  async function fetchDataSearchExample() {
+    const res = await fetch("http://127.0.0.1:5000/example").catch((err) => {
       console.log(err);
     });
+
     const data = await res.json();
-    // data = Array.from(data);
+    setResponse(data);
+    console.log("fetchDataSearch -> : ", data);
+  }
+
+  async function fetchDataSearch() {
+    const res = await fetch("http://127.0.0.1:5000/query/" + query).catch(
+      (err) => {
+        console.log(err);
+      }
+    );
+
+    const data = await res.json();
     setResponse(data);
     console.log("fetchDataSearch -> : ", data);
   }
@@ -57,7 +71,7 @@ export default function Home() {
   function ListSnips(props) {
     return (
       <div className={styles["list-snips"]}>
-        <p>{props.value}</p>
+        <p>{(props.index ? "_ " : "") + props.value}</p>
       </div>
     );
   }
@@ -67,18 +81,14 @@ export default function Home() {
   ));
 
   const newWordSnippets = listWordSnippets.map((snip) =>
-    snip.map((sSnip, sIndex) => (
-      <ListSnips key={sIndex} value={sSnip}>
-        {(sIndex ? ", " : "") + sSnip}
-      </ListSnips>
-    ))
+    snip.map((sSnip, sIndex) => <ListSnips key={sIndex} value={sSnip} />)
   );
 
   return (
     <div className={styles.container}>
       <Head>
         <title>Flask Query</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/qry.ico" />
       </Head>
 
       <div className={styles.jumbotron}>
